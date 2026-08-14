@@ -1,0 +1,70 @@
+{% extends "record/base.html" %}
+
+{% block content %}
+<div class="card" style="width: 28rem;">
+  <div class="card-body">
+  {% if task_id %}
+  <style>
+    @keyframes rotate {from {transform: rotate(0deg);}
+    to {transform: rotate(360deg);}}
+    @-webkit-keyframes rotate {from {-webkit-transform: rotate(0deg);}
+    to {-webkit-transform: rotate(360deg);}}
+    .imgr{
+        -webkit-animation: 3s rotate linear infinite;
+        animation: 3s rotate linear infinite;
+        -webkit-transform-origin: 50% 50%;
+        transform-origin: 50% 50%;
+    }
+    #imgr2 {
+        -webkit-animation-direction: reverse;
+        animation-direction: reverse;
+    }
+    #imgr1{position:relative;left:50px;top:-10px;}
+    #imgr2{position:relative;left:35px;top:-6px;}
+  </style>
+   {% load static %}
+  <div id="celery-result">
+    <div id="img2">
+        <img src="{% static 'imagen/iconos/engranaje1.png' %}" alt="Icono de un engranaje" width="106" height="105" class="imgr" id="imgr1">
+        <img src="{% static 'imagen/iconos/engranaje2.png' %}" alt="Icono de un engranaje" width="79" height="78" class="imgr" id="imgr2">
+    </div>
+  </div>
+  <div class='progress-wrapper'>
+      <div id='progress-bar' class='progress-bar' style="background-color: #68a9ef; width: 0%;">&nbsp;</div>
+  </div>
+  <div id="progress-bar-message">Esperando a que inicie el proceso..</div>
+  <script src="{% static 'celery_progress/celery_progress.js' %}"></script>
+  <script>
+      // vanilla JS version
+      document.addEventListener("DOMContentLoaded", function () {
+          var progressUrl = "{% url 'celery_progress:task_status' task_id %}";
+          CeleryProgressBar.initProgressBar(progressUrl);
+      });
+  </script>
+  <script>
+      // JQuery
+      var progressUrl = "{% url 'celery_progress:task_status' task_id %}";
+  
+      function customResult(resultElement, result) {
+          $(resultElement).append(
+              $('<p>').text('Sum of all seconds is ' + result)
+          );
+      }
+  
+      $(function () {
+          CeleryProgressBar.initProgressBar(progressUrl, {
+              onResult: customResult,
+          })
+      });
+      <p></p>
+  </script>
+  {% else %}
+  <p>Inicie el proceso de reconocimiento para los nuevos registros</p>
+  <form method="POST" >
+    {% csrf_token %}
+    <button type="submit" class="btn btn-primary mb-2" name="btn" value="trainRecord">Iniciar Proceso</button>
+  </form>
+  {% endif %}
+  </div>
+</div>
+{% endblock %}

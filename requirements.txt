@@ -1,0 +1,17 @@
+# Dependencias reales del proyecto Django (cam/ + Celery), resueltas desde el
+# entorno conda "opencv4.7" que efectivamente corre el proyecto (ver
+# requirements-freeze.txt para el snapshot completo del entorno, incluyendo
+# paquetes ajenos al proyecto como torch/ultralytics usados solo por los
+# scripts sueltos de yolo/ejemplo1/).
+Django==5.2.5
+Pillow==12.2.0
+numpy==2.2.6
+opencv-python==4.12.0.88
+opencv-contrib-python==4.12.0.88
+imutils==0.5.4
+celery==5.5.3
+celery-progress==0.5
+django_celery_results==2.6.0
+redis==6.4.0
+requests==2.32.5
+cryptography==49.0.0

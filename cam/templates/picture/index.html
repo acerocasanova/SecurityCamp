@@ -1,0 +1,41 @@
+{% extends "picture/base.html" %}
+
+{% block content %}
+{% load static %}
+<div class="card text-center">
+    <div class="card-header">
+        <div class="row align-items-start">
+            <div class="col">
+                <h5>Capturar Imagenes</h5>
+            </div>
+            <div class="col">
+                &nbsp;
+            </div>
+            <div class="col">
+                &nbsp;
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <p class="card-text">
+            {% if mensaje %}
+            <img class="img-fluid" src="{% static 'imagen/iconos/record.gif' %}" alt="Grabando" width="106" height="105">
+            {% endif %}
+            <img class="img-fluid" src="{% url 'showTakePicture' proceso=proceso %}" width="{{tamanoVideo}}"></p>
+    </div>
+    <div class="card-footer text-body-secondary">
+        <form method="POST">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary mb-2" name="btn" value="takePicture">Toma foto</button>
+            <button type="submit" class="btn btn-primary mb-2" name="btn" value="takePictureRafaga">Rafaga de
+                Imagenes</button>
+            {% if mensaje %}
+                <button type="submit" class="btn btn-primary mb-2" name="btn" value="stopRecord">Parar Grabacion</button>
+            {% else %}
+                <button type="submit" class="btn btn-primary mb-2" name="btn" value="startRecord">Iniciar Grabacion</button>
+            {% endif %}
+            <button type="submit" class="btn btn-primary mb-2" name="btn" value="listPictures">Bitacora</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

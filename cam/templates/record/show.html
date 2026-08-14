@@ -1,0 +1,70 @@
+{% extends "record/base.html" %}
+
+{% block content %}
+<div class="card" style="width: 32rem;">
+  {% load static %}
+  <img src="{% static 'storage_record/'%}{{showRecord.image_name}}.jpg"  alt="{{ showRecord.first_name }} {{showRecord.last_name}}">
+  <div class="card-body">
+        <h5 class="card-title">{{ showRecord.first_name }} {{showRecord.last_name}}</h5>
+        <p class="card-text">
+          <strong>Rut :</strong> {{ showRecord.rut }}
+          <br><strong>Fecha Nacimiento : </strong> {{ showRecord.date_of_birth }}
+          <br><strong>Telefono :</strong> {{ showRecord.phone_number }}
+          <br><strong>Fecha Registro : </strong>{{ showRecord.date_register}}
+          <br><strong>Registro de Reconocimiento : </strong>{{totRegistPicture}}%
+        </p>
+        <p class="card-text">
+          <small class="text-body-secondary">
+          {% if showRecord.level_dangerous == 0 %}
+          <p class="card-text text-white bg-success"><strong>Nivel peligrosidad</strong></p>
+          {% elif showRecord.level_dangerous == 1 %}
+          <p class="card-text text-white  bg-warning"><strong>Nivel peligrosidad</strong></p>
+          {% elif showRecord.level_dangerous == 2 %}
+          <p class="card-text text-white bg-danger"><strong>Nivel peligrosidad</strong></p>
+          {% endif %}
+          </small>
+        </p>
+        <a href="{{ showRecord.get_update_url }}" class="btn btn-primary">Editar</a>
+        <a href="{{ showRecord.get_takePicture }}" class="btn btn-primary">Tomar Foto</a>
+        <a href="{{ showRecord.get_takeRecord }}" class="btn btn-primary">Generar Reconocimiento</a>
+        <a href="{{ showRecord.get_delete_url }}" class="btn btn-primary">Eliminar</a>
+  </div>
+</div>
+
+<!--
+
+<div class="row row-cols-1 row-cols-md-2 g-4">
+  <div class="col">
+    <div class="card h-100">
+      {% load static %}
+      <img src="{% static 'storage_record/'%}{{showRecord.image_name}}.jpg" alt="{{ showRecord.first_name }} {{showRecord.last_name}}">
+      <div class="card-body">
+        <h5 class="card-title"></h5>
+        <p class="card-text">
+          
+        </p>
+        <p class="card-text">
+          <small class="text-body-secondary">
+          
+          </small>
+        </p>
+      </div>
+    </div>
+  </div>
+  <div class="col">
+    <div class="card h-100">
+      <img src="{% url 'showVideoCam' %}" class="img-fluid rounded-start">
+      <div class="card-body">
+        <h5 class="card-title">Acciones</h5>
+        <p class="card-text">
+        <form method="POST" >
+          {% csrf_token %}
+          <button type="submit" class="btn btn-primary mb-2" name="btn" value="TomarFoto">Tomar Foto</button>
+          <button type="submit" class="btn btn-primary mb-2" name="btn" value="CapturarRegistro">Capturar Registro</button>
+        </form>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>-->
+{% endblock %}

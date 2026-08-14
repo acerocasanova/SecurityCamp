@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block sidebar %}
+<ul class="list-unstyled ps-0">
+    <li class="mb-1">
+        <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
+            data-bs-toggle="collapse" data-bs-target="#home-collapse" aria-expanded="true">
+            Detectar
+        </button>
+        <div class="collapse show" id="home-collapse">
+            <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                <li><a href="{% url 'moveIndex' %}"
+                        class="link-dark d-inline-flex text-decoration-none rounded">Movimiento</a>
+                </li>
+                <li><a href="{% url 'detectPerson' %}"
+                        class="link-dark d-inline-flex text-decoration-none rounded">Personas</a>
+                </li>
+            </ul>
+        </div>
+    </li>
+    <li class="border-top my-3"></li>
+</ul>
+
+{% endblock %}
+{% block content %}
+{% endblock %}

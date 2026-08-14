@@ -1,0 +1,53 @@
+{% extends "picture/base.html" %}
+
+{% block content %}
+<form method="POST">
+    {% csrf_token %}
+
+    <div class="card text-center">
+        <div class="card-header">
+            <div class="row align-items-start">
+                <div class="col">
+                {{fechaRegistro}}
+                </div>
+                <div class="col">
+                    &nbsp;
+                </div>
+                <div class="col">
+                    <a class="btn btn-primary" href="{% url 'downloadFile' id=id  %}">Download</a>
+                </div>
+            </div>
+
+        </div>
+        <div class="card-body">
+            <p class="card-text">
+                <img class="img-fluid"
+                src="{% url 'showVideo' id=id option=option numeroFrames=numeroFrames velocidad=velocidad %}"
+                width="{{tamanoVideo}}">
+            </p>
+        </div>
+        <div class="card-footer text-body-secondary">
+            <div class="container text-center">
+                <div class="row align-items-start">
+                    <div class="col">
+                        <button type="submit" class="btn btn-primary mb-2" name="btn" value="reset">Reset</button>
+                        <button type="submit" class="btn btn-primary mb-2" name="btn" value="play">Play</button>
+                        <button type="submit" class="btn btn-primary mb-2" name="btn" value="stop">Stop</button>
+                        <button type="submit" class="btn btn-primary mb-2" name="btn" value="back">&#60;&#60;</button>
+                        <button type="submit" class="btn btn-primary mb-2" name="btn" value="next">&#62;&#62;</button>
+                    </div>
+                    <div class="col">
+                        <input id="pi_input" name="pi_input" class="form-range" type="range" value="0" min="0"
+                            max="{{tiempoSegundosVideo}}" />
+                        <output id="value"></output> - {{tiempoDuracionVideo}}
+                    </div>
+                    <div class="col">
+                        <button type="submit" class="btn btn-primary mb-2" name="btn" value="go">Go</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+{% endblock %}

@@ -1,0 +1,93 @@
+{% extends "config/base.html" %}
+
+{% block content %}
+
+<div class="card text-center">
+    <div class="card-header">
+        <div class="row align-items-start">
+            <div class="col">
+                <h5>Configuracion</h5>
+            </div>
+            <div class="col">
+                &nbsp;
+            </div>
+            <div class="col">
+                &nbsp;
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <form method="POST">
+            {% csrf_token %}
+            <div class="row align-items-start">
+                <div class="col">
+                </div>
+                <div class="col">
+                    <input class="form-control" list="datalistOptions" name="list_config" id="list_config"
+                        placeholder="Agrege una nueva configuracion ...">
+                    <datalist id="datalistOptions">
+                        {% for nombre,valor in show_list_Config %}
+                        <option value="{{nombre}}">{{valor}}</option>
+                        {% endfor %}
+                    </datalist>
+                </div>
+                <div class="col">
+                    <button type="submit" class="btn btn-primary mb-2" name="btn" value="agregar">Agregar</button>
+                </div>
+            </div>
+            {% if show_list_config_bd %}
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Variable</th>
+                        <th scope="col">Valor</th>
+                        <th scope="col">Activar</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for config in show_list_config_bd %}
+                    <tr>
+                        <td>{{config.c_name}}</td>
+                        <td>
+                            {% if config.c_value != None %}
+                            <input class="form-control" type="text" placeholder="Ingresa tu valor y guarda"
+                                aria-label="default input example" value="{{config.c_value}}" id="valor{{config.id}}"
+                                name="valor{{config.id}}">
+                            {% else %}
+                            <input class="form-control" type="text" placeholder="Ingresa tu valor y guarda"
+                                aria-label="default input example" id="valor{{config.id}}" name="valor{{config.id}}">
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="form-check">
+                                {% if config.c_activity != False %}
+                                <input class="form-check-input" type="checkbox"  name="check{{config.id}}"
+                                    id="check{{config.id}}" checked>
+                                {% else %}
+                                <input class="form-check-input" type="checkbox"  name="check{{config.id}}"
+                                    id="check{{config.id}}">
+                                {% endif %}
+                            </div>
+                        </td>
+                        <td> 
+                            <a href="{{config.get_delete_url}}" class="btn btn-primary mb-2">Eliminar</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    <tr>
+                        <td>
+                            <button type="submit" class="btn btn-primary mb-2" name="btn"
+                                value="guardar">Guardar</button>
+                        </td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+            {% endif %}
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends "record/base.html" %}
+
+{% block content %}
+<h4>Nuevo Registro</h4>
+<form method="POST" class="form-inline">
+    {% csrf_token %}
+    <div class="form-group">
+        <table>
+            <tr>
+                <td>{{ form.as_table }}</td>
+            </tr>
+            <tr>
+                <td><button type="submit" class="btn btn-primary mb-2">Guardar</button></td>
+            </tr>
+        </table>
+    </div>
+</form>
+{% endblock %}

@@ -1,0 +1,10 @@
+<div class="showAllCam">
+    {% if total_pantallas %}
+    <div class="subtitulo">Pantalla</div>
+    <div class="galeria">
+        {% for cam in total_pantallas %}
+        <img src="{% url 'showAllCam' idCam=cam.id %}" alt="Visualizar Camaras {{cam.id}}">
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>

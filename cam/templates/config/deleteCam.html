@@ -1,0 +1,25 @@
+{% extends "config/base.html" %}
+
+{% block content %}
+
+<p>Confirme si esta seguro de eliminar 
+  
+  {%if cam.a_tipo_cam == 0 %}
+    Camara Integrada
+  {% else %}
+    Camara Ip
+  {% endif %}
+
+  {{ cam.a_name }} 
+</p>
+
+<form action="" method="POST">
+  {% csrf_token %}
+  <input type="submit" action="" value="Confirmar" class="btn btn-primary mb-2" />
+  <a href="{% url 'configCam' %}" class="btn btn-primary mb-2">Cancelar</a>
+
+</form>
+
+
+
+{% endblock %}

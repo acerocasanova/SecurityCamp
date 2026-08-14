@@ -1,0 +1,14 @@
+{% extends "showCam/base.html" %}
+{% block content %}
+ <div class="container">
+    {% if total_pantallas %}
+    {% for pantalla in total_pantallas %}
+        {% for cam in pantalla %}
+        <div class="box">
+            <img src="{% url 'showAllCam' idCam=cam.id %}"  alt="camara {{cam.id}}">
+        </div>
+        {% endfor %}
+    {% endfor %}
+    {% endif %}
+</div>
+{% endblock %}

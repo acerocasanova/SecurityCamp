@@ -1,0 +1,52 @@
+{% extends "record/base.html" %}
+
+{% block content %}
+{% if showListReco %}
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Nombres</th>
+      <th scope="col">Apellidos</th>
+      <th scope="col">Fecha de Nacimiento</th>
+      <th scope="col">Rut</th>
+      <th scope="col">Departamento</th>
+      <th scope="col">Nivel de Peligro</th>
+      <th scope="col">Telefono</th>
+      <th scope="col">Fecha de Registro</th>
+      <th scope="col">Ver</th>
+      <th scope="col">Editar</th>
+      <th scope="col">Eliminar</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for record in showListReco %}
+    <tr>
+      <th scope="row">{{record.first_name}}</th>
+      <td>{{record.last_name}}</td>
+      <td>{{record.date_of_birth}}</td>
+      <td>{{record.rut}}</td>
+      <td>{{record.apartament}}</td>
+      <td>
+      <small class="text-body-secondary">
+        {% if record.level_dangerous == 0 %}
+        <p class="card-text text-white bg-success"><strong>Nivel</strong></p>
+        {% elif record.level_dangerous == 1 %}
+        <p class="card-text text-white  bg-warning"><strong>Nivel</strong></p>
+        {% elif record.level_dangerous == 2 %}
+        <p class="card-text text-white bg-danger"><strong>Nivel</strong></p>
+        {% endif %}
+      </small>
+      </td>
+      <td>{{record.phone_number}}</td>
+      <td>{{record.date_register}}</td>
+      <td><a href="{{ record.get_absolute_url }}">-.-</a></td>
+      <td><a href="{{ record.get_update_url }}">-.-!</a></td>
+      <td><a href="{{ record.get_delete_url }}">X</a></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p>No existen registros</p>
+{% endif %}
+{% endblock %}

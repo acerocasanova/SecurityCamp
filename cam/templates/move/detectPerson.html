@@ -1,0 +1,38 @@
+{% extends "move/base.html" %}
+
+{% block content %}
+<div class="card text-center">
+    <div class="card-header">
+        <form method="POST">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col">
+                    <h5>Detectar Personas</h5>
+                </div>
+                <div class="col">
+                    <select id="selectCamToShow" name="selectCamToShow" class="form-select"
+                        aria-label="Default select example">
+                        <option selected>Seleccione una camara</option>
+                        {% if show_list_cam_bd %}
+                        {% for cam in show_list_cam_bd %}
+                            <option value="{{cam.id}}">{{cam.a_name}}</option>
+                        {% endfor %}
+                        {% endif %}
+                    </select>
+                </div>
+                <div class="col">
+                    <button type="submit" class="btn btn-primary" name="btn" value="seleccionar">Aceptar</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="card-body">
+                <div class="box">
+                    <img src="{% url 'showDetectedPerson' idCam=idCam %}" >
+                </div>
+    </div>
+    <div class="card-footer text-body-secondary">
+        &nbsp;
+    </div>
+</div>
+{% endblock %}

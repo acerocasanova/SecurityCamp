@@ -1,0 +1,13 @@
+{% extends "record/base.html" %}
+
+{% block content %}
+<div class="card" style="width: 28rem;">
+  <img src="{% url 'showVideoCamTakeRecord' pk=pk %}" width="{{tamanoVideo}}" class="img-fluid rounded-start">
+  <div class="card-body">
+        <form method="POST" >
+          {% csrf_token %}
+          <button type="submit" class="btn btn-primary mb-2" name="btn" value="Voler">Voler</button>
+        </form>
+  </div>
+</div>
+{% endblock %}

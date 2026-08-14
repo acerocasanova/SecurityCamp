@@ -1,0 +1,224 @@
+{% extends "config/base.html" %}
+
+{% block content %}
+<div class="configCam" >
+<form method="POST">
+    {% csrf_token %}
+    <div class="card text-center">
+        <div class="card-header">
+            <div class="row align-items-start">
+                <div class="col">
+                    <h5>Agregar Camara</h5>
+                </div>
+                <div class="col">
+                    &nbsp;
+                </div>
+                <div class="col">
+                    &nbsp;
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row align-items-start">
+                <div class="col">
+                </div>
+                <div class="col">
+                    <input class="form-control" list="datalistOptions" name="list_config" id="list_config"
+                        placeholder="Agrege una nueva Camara">
+                    <datalist id="datalistOptions">
+                        {% for nombre,valor in show_list_Config %}
+                        <option value="{{nombre}}">{{valor}}</option>
+                        {% endfor %}
+                    </datalist>
+                </div>
+                <div class="col">
+                    <button type="submit" class="btn btn-primary mb-2" name="btn" value="agregar">Agregar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+    {% if show_list_config_bd %}
+    {% for config in show_list_config_bd %}
+    {% if config.a_tipo_cam == 0 %}
+    <form method="POST">
+        {% csrf_token %}
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Camara Integrada</h5>
+            <p class="card-text">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="formulario">Nombre</div>
+                    <div class="caja_formulario">
+                        {% if config.a_name != None %}
+                        <input class="form-control" type="text" placeholder="Nombre de la Camara"
+                            aria-label="default input example" value="{{config.a_name}}" id="nombre"
+                            name="nombre">
+                        {% else %}
+                        <input class="form-control" type="text" placeholder="Nombre de la Camara"
+                            aria-label="default input example" name="nombre" id="nombre">
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-md-1">
+                    <div class="formulario">Numero</div>
+                    <div class="caja_formulario">
+                        {% if config.a_channel != None %}
+                        <input class="form-control" type="text" placeholder="Numero" maxlength="3"
+                            aria-label="default input example" value="{{config.a_channel}}"
+                            id="numero" name="numero">
+                        {% else %}
+                        <input class="form-control" type="text" placeholder="Numero" maxlength="3"
+                            aria-label="default input example" name="numero"
+                            id="numero">
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-md-1">
+                    <div class="formulario">Activado</div>
+                    <div class="caja_formulario">
+                        <div class="form-check">
+                            {% if config.a_activity != False %}
+                            <input class="form-check-input" type="checkbox" name="activo"
+                                id="activo" checked>
+                            {% else %}
+                            <input class="form-check-input" type="checkbox" name="activo"
+                                id="activo">
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </p>
+            <input type="hidden" name='id' id='id' value="{{config.id}}">
+            <button type="submit" class="btn btn-primary mb-2" name="btn" value="GuardarCamIntegrada">Guardar</button>
+            <a href="{{ config.get_delete_url }}" class="btn btn-primary mb-2">Eliminar</a>
+        </div>
+    </div>
+    </form>
+    {% else %}
+    <form method="POST">
+        {% csrf_token %}
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Camara Ip</h5>
+            <p class="card-text">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="formulario">Nombre</div>
+                    <div class="caja_formulario">
+                        {% if config.a_name != None %}
+                        <input class="form-control" type="text" placeholder="Nombre" aria-label="default input example"
+                            value="{{config.a_name}}" id="nombre" name="nombre">
+                        {% else %}
+                        <input class="form-control" type="text" placeholder="Nombre" aria-label="default input example"
+                            name="nombre" id="nombre">
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="formulario">Direccion Ip</div>
+                    <div class="caja_formulario">
+                        {% if config.a_ip != None %}
+                        <input class="form-control" type="text" placeholder="Direccion IP"
+                            aria-label="default input example" value="{{config.a_ip}}" id="ip"
+                            name="ip">
+                        {% else %}
+                        <input class="form-control" type="text" placeholder="Direccion IP"
+                            aria-label="default input example" name="ip" id="ip">
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="formulario">Usuario</div>
+                    <div class="caja_formulario">
+                        {% if config.a_user != None %}
+                        <input class="form-control" type="text" placeholder="Usuario" aria-label="default input example"
+                            value="{{config.a_user}}" id="usuario" name="usuario">
+                        {% else %}
+                        <input class="form-control" type="text" placeholder="Usuario" aria-label="default input example"
+                            name="usuario" id="usuario">
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="formulario">Clave</div>
+                    <div class="caja_formulario">
+                        {% if config.a_pass != None %}
+                        <input class="form-control" type="password" placeholder="Clave" aria-label="default input example"
+                            value="{{config.a_pass}}" id="clave" name="clave">
+                        {% else %}
+                        <input class="form-control" type="password" placeholder="Clave" aria-label="default input example"
+                            name="clave" id="clave">
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-md-1">
+                    <div class="formulario">Canal</div>
+                    <div class="caja_formulario">
+                        {% if config.a_channel != None %}
+                        <input class="form-control" type="text" placeholder="Canal" maxlength="3"
+                            aria-label="default input example" value="{{config.a_channel}}"
+                            id="canal" name="canal">
+                        {% else %}
+                        <input class="form-control" type="text" placeholder="Canal" maxlength="3"
+                            aria-label="default input example" name="canal"
+                            id="canal">
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="formulario">Transmision</div>
+                    <div class="caja_formulario">
+                        {% if config.a_tipo_transmision != None %}
+                        <input class="form-control" type="text" placeholder="Tipo de Transmision" maxlength="3"
+                            aria-label="default input example" value="{{config.a_tipo_transmision}}"
+                            id="transmision" name="transmision">
+                        {% else %}
+                        <input class="form-control" type="text" placeholder="Tipo de Transmision" maxlength="3"
+                            aria-label="default input example" name="transmision"
+                            id="transmision">
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-md-1">
+                    <div class="formulario">Puerto</div>
+                    <div class="caja_formulario">
+                        {% if config.a_port != None %}
+                        <input class="form-control" type="text" placeholder="Puerto" aria-label="default input example"
+                            maxlength="6" value="{{config.a_port}}" id="puerto"
+                            name="puerto">
+                        {% else %}
+                        <input class="form-control" type="text" placeholder="Puerto" aria-label="default input example"
+                            maxlength="6"  name="puerto" id="puerto">
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-md-1">
+                    <div class="formulario">Activado</div>
+                    <div class="caja_formulario">
+                        <div class="form-check">
+                            {% if config.a_activity != False %}
+                            <input class="form-check-input" type="checkbox" name="activo"
+                                id="activo" checked>
+                            {% else %}
+                            <input class="form-check-input" type="checkbox" name="activo"
+                                id="activo">
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </p>
+            <input type="hidden" name='id' id='id' value="{{config.id}}">
+            <button type="submit" class="btn btn-primary mb-2" name="btn" value="GuardarCamIp">Guardar</button>
+            <a href="{{ config.get_delete_url }}" class="btn btn-primary mb-2">Eliminar</a>
+        </div>
+    </div>
+    </form>
+    {% endif %}
+    {% endfor %}
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends "record/base.html" %}
+
+{% block content %}
+
+<p>Confirme si esta seguro de eliminar el registro: {{ record.first_name }} {{record.last_name}}?</p>
+
+<form action="" method="POST">
+  {% csrf_token %}
+  <input type="submit" action="" value="Confirmar" />
+</form>
+
+{% endblock %}
