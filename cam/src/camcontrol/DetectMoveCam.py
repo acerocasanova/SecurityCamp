@@ -8,6 +8,9 @@ from cam.src.configuracion.Configuracion import DictonaryConfiguration, Web_what
 from cam.src.configuracion.AgregarCamara import ConfiguracionAgregarCamara
 import threading
 from cam.src.camcontrol.TypeCam import GetTypeCam
+from cam.src.camcontrol.SharedCamera import SharedCamera
+from cam.src.camcontrol.streaming import mjpeg_stream
+from cam.src.camcontrol.strategies import MovementDetectionStrategy, FaceBoxStrategy
 from cam.models import Imagen
 from cam.src.utils.WorksFiles import WorksFiles
 
@@ -24,11 +27,11 @@ class DetectMoveCam(object):
             getTypeCam = GetTypeCam()
             
             if showCam.a_tipo_cam == 0:
-                self.cap = cv2.VideoCapture(getTypeCam.get_cam_integrada(showCam))
+                self.cap = SharedCamera.get_camera(getTypeCam.get_cam_integrada(showCam))
             elif idCam != 0 and showCam.a_tipo_cam == 1:
-                self.cap = cv2.VideoCapture(getTypeCam.get_cam_ip(showCam))
+                self.cap = SharedCamera.get_camera(getTypeCam.get_cam_ip(showCam))
         else:
-            self.cap = cv2.VideoCapture(0)
+            self.cap = SharedCamera.get_camera(0)
 
 
         self.full_body_detection   = cv2.CascadeClassifier(os.path.join(settings.DIR_HAARCASCADES,'haarcascade_fullbody.xml'))
@@ -71,11 +74,12 @@ class DetectMoveCam(object):
             nameFile   = "{}{}".format("DetectPerson_"+str(time.time()),settings.EXTENSION_IMG)
             pathImages = "{}/{}".format(baseDir,nameFile)
 
-            insertPath = pathImages.replace(insertPath,"")
+            insertPath = self.worksFiles.convPath(pathImages,insertPath)
             imagen     = Imagen(imagen_path=insertPath,imagen_name=nameFile,imagen_type=1,imagen_group = 1, imagen_date=timezone.now())
             imagen.save()
             self.savePicture(pathImages)
-            urlImagen = settings.DIRECCION_URL_SERVER+"/"+settings.STATIC_URL+"/"+settings.WEB_STORAGE_TAKE_PICTURE+"/"+insertPath
+            urlImagen = "{}{}picture/take{}".format(
+                settings.DIRECCION_URL_SERVER.rstrip("/"), settings.MEDIA_URL, insertPath)
             
             for get_value in self.number_whatsapp:
                 print("enviando numero a :",get_value)
@@ -86,44 +90,11 @@ class DetectMoveCam(object):
         pass
 
     def getDetectMove(self):
-        if not self.cap.isOpened():
-            print("No esta activada la camara")
-            exit()
-
-        # Llamada al método
-        fgbg = cv2.createBackgroundSubtractorKNN(history=500, dist2Threshold=400, detectShadows=False)
-        # Deshabilitamos OpenCL, si no hacemos esto no funciona
-        cv2.ocl.setUseOpenCL(False)
-
-        while self.cap.isOpened():
-
-            success, frame = self.cap.read()
-            if not success:
-                break
-            estado = "No existe movimiento"
-            color = (0,255,0)
-            #frame = imutils.resize(frame,width=settings.SIZESHOWCAM)
-            fgmask = fgbg.apply(frame)
-            # Copiamos el umbral para detectar los contornos
-            contornosimg = fgmask.copy()
-
-            # Buscamos contorno en la imagen
-            contornos, hierarchy = cv2.findContours(contornosimg,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
-            # Recorremos todos los contornos encontrados
-            for c in contornos:
-                # Eliminamos los contornos más pequeños
-                if cv2.contourArea(c) > 10000:
-                    estado = "Movimiento detectado!"
-                    color = (0,0,255)
-                    # Obtenemos el bounds del contorno, el rectángulo mayor que engloba al contorno
-                    (x, y, w, h) = cv2.boundingRect(c)
-                    # Dibujamos el rectángulo del bounds
-                    cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
-
-            #frame_flip = cv2.flip(frame,1)
-            cv2.putText(frame, estado , (10, 45),cv2.FONT_HERSHEY_SIMPLEX, 2, color,2)
-            ret, jpeg = cv2.imencode(settings.EXTENSION_IMG, frame)
-            yield (b'--frame\r\n' b'Content-Type: image/jpeg\r\n\r\n' + jpeg.tobytes() + b'\r\n\r\n')
+        """Antes tenia su propio while+encode+yield con la resta de fondo
+        y la deteccion de contornos escritas inline; ahora es el template
+        mjpeg_stream() + MovementDetectionStrategy (misma logica, aislada
+        en su propia clase reutilizable)."""
+        return mjpeg_stream(self.cap, [MovementDetectionStrategy()])
 
     def detectar_rostro_frontal(self):
         while self.cap.isOpened():
@@ -182,45 +153,17 @@ class DetectMoveCam(object):
                 yield (b'--frame\r\n' b'Content-Type: image/jpeg\r\n\r\n' + jpeg.tobytes() + b'\r\n\r\n')
 
     def detectar_persona(self):
-        color = (255,0,0)
-        thickness = 2
-        
-        while self.cap.isOpened():
-            succes, frame = self.cap.read()
+        """Antes tenia su propio while+encode+yield con la deteccion de
+        rostros inline; ahora es el template mjpeg_stream() +
+        FaceBoxStrategy, que invoca _on_person_detected() por cada rostro
+        (igual que antes se llamaba a action_detected() dentro del for)."""
+        strategy = FaceBoxStrategy(self.face_detection, on_detect=self._on_person_detected)
+        return mjpeg_stream(self.cap, [strategy])
 
-            if succes:
-                gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-                sideGray = cv2.flip(gray,1)
-                #detectedBody = self.full_body_detection.detectMultiScale(gray,scaleFactor = settings.SCALE_FACTOR, minNeighbors=settings.MIN_NEIGHBORS)
-                detectFace   = self.face_detection.detectMultiScale(gray,scaleFactor = settings.SCALE_FACTOR, minNeighbors=settings.MIN_NEIGHBORS)
-                #detectEyes  = self.eyes_detecttion.detectMultiScale(gray,scaleFactor = settings.SCALE_FACTOR, minNeighbors=settings.MIN_NEIGHBORS)
-                #sideFace     = self.side_face_detection.detectMultiScale(gray,scaleFactor = settings.SCALE_FACTOR, minNeighbors=settings.MIN_NEIGHBORS)
-                #othersideFace= self.side_face_detection.detectMultiScale(sideGray,scaleFactor = settings.SCALE_FACTOR, minNeighbors=settings.MIN_NEIGHBORS)
-                #self.frame_flip = cv2.flip(frame,1)
-                self.frame_flip = frame
+    def _on_person_detected(self, frame):
+        self.frame_flip = frame
+        self.action_detected()
 
-                #for (x,y,w,h) in detectedBody:
-                #    cv2.rectangle(frame,(x,y),(x+w,y+h),color,thickness)
-                #    self.action_detected()
-
-                for (x,y,w,h) in detectFace: #si se detecta un rostro se almacenara en estas variables
-                    cv2.rectangle(frame,(x,y),(x+w,y+h),color,thickness)
-                    self.action_detected()
-                    
-                #for (x,y,w,h) in sideFace:
-                #    cv2.rectangle(frame,(x,y),(x+w,y+h),color,thickness)
-                #    self.action_detected()
-                    
-                #for (x,y,w,h) in othersideFace:
-                #    cv2.rectangle(self.frame_flip,(x,y),(x+w,y+h),color,thickness)
-                #    self.action_detected()
-
-                #for (x,y,w,h) in detectEyes:
-                #   cv2.rectangle(frame,(x,y),(x+w,y+h),color,thickness)
-
-                ret, jpeg = cv2.imencode(settings.EXTENSION_IMG, frame)
-                yield (b'--frame\r\n' b'Content-Type: image/jpeg\r\n\r\n' + jpeg.tobytes() + b'\r\n\r\n')
-        
 
     def detectarPersonasddd(self):
         HOGCV = cv2.HOGDescriptor()

@@ -58,7 +58,7 @@ cover/
 # Django stuff:
 *.log
 local_settings.py
-db.sqlite3
+#db.sqlite3
 db.sqlite3-journal
 
 # Flask stuff:
@@ -160,6 +160,11 @@ cython_debug/
 #.idea/
 
 # Project specific
-storage/
+#storage/
+/staticfiles/
 db.sqlite3.respaldo
 .DS_Store
+
+/storage/configFiles/modeloEigenFace.xml
+/storage/configFiles/modeloLBPHFace.xml
+/storage/configFiles/modeloFisherFace.xml

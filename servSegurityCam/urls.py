@@ -28,5 +28,9 @@ urlpatterns += [
     path("", include('cam.urls')),
     path('celery-progress/', include('celery_progress.urls')),
 ]
-urlpatterns+= static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
-urlpatterns+= staticfiles_urlpatterns()
+# staticfiles_urlpatterns() sirve STATIC_URL en desarrollo usando los
+# finders (no necesita collectstatic); STATIC_ROOT es solo para el
+# collectstatic de produccion, no hace falta un segundo patron para eso.
+urlpatterns += staticfiles_urlpatterns()
+# Contenido generado en tiempo de ejecucion (fotos, videos, entrenamiento).
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

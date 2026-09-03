@@ -12,14 +12,48 @@ html {
 }
 
 main {
-  height: 100vh;
-  height: -webkit-fill-available;
-  max-height: 100vh;
-  overflow-x: auto;
-  overflow-y: hidden;
+  overflow-x: hidden;
+}
+
+/* Ninguna imagen debe poder desbordar su contenedor en pantallas chicas,
+   aunque el <img> traiga width/height fijos por atributo. */
+img {
+  max-width: 100%;
+  height: auto;
 }
 
 .dropdown-toggle { outline: 0; }
+
+/** MENU SUPERIOR (HEADER NAVBAR) ***/
+.content-wrap {
+  padding-top: 4.25rem;
+  padding-bottom: 1.5rem;
+}
+
+.navbar .brand-dot {
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: 50%;
+  background-color: #2ecc71;
+  box-shadow: 0 0 6px #2ecc71;
+  display: inline-block;
+}
+
+.navbar .nav-link.dropdown-toggle.active {
+  color: #fff;
+  font-weight: 600;
+}
+
+.navbar .nav-link.dropdown-toggle.active::after {
+  filter: brightness(2);
+}
+
+@media (max-width: 991.98px) {
+  .content-wrap {
+    padding-top: 1rem;
+  }
+}
+/** FIM MENU SUPERIOR ***/
 
 .btn-toggle {
   padding: .25rem .5rem;

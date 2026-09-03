@@ -1,4 +1,5 @@
 from django.apps import AppConfig
+from django.conf import settings
 
 class CamConfig(AppConfig):
     default_auto_field = "django.db.models.BigAutoField"
@@ -6,4 +7,4 @@ class CamConfig(AppConfig):
     #print("iniciando servidor Cam")
 
 def getConfiguraciones(request):
-    return {'tamanoVideo': 800} 
+    return {'tamanoVideo': 800, 'MEDIA_URL': settings.MEDIA_URL}

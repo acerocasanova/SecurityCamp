@@ -21,11 +21,11 @@
     <div class="card-body">
       <p class="card-text">
       <div class="container text-center">
-        <div class="row row-cols-6">
+        <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-6">
           {% for image in listImages %}
           <div class="col">
-            <a target="_blank" href="{% static 'storage_take_picture'%}/{{image}}">
-              <img src="{% static 'storage_take_picture'%}/{{image}}" alt="img" width="150" height="100">
+            <a target="_blank" href="{{ MEDIA_URL }}picture/take/{{image}}">
+              <img src="{{ MEDIA_URL }}picture/take/{{image}}" alt="img" width="150" height="100">
             </a>
             <div class="desc">
               <button type="submit" class="btn btn-primary mb-2" name="btn" value="{{image}}" >Eliminar</button>

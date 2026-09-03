@@ -122,31 +122,37 @@ USE_TZ = True
 # Redirect to home URL after login (Default redirects to /cam/profile/)
 LOGIN_REDIRECT_URL = '/'
 
-# Static files (CSS, JavaScript, Images)
+# Static files (CSS, JavaScript, Images que vienen CON el codigo)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-#URL WEB
-
 STATIC_URL = "static/"
+# Los assets (bootstrap, iconos, JS) viven en <raiz del proyecto>/static/,
+# no dentro de la app `cam` -son de todo el sitio, no de una app puntual-
+# asi que hay que decirle a Django donde buscarlos explicitamente.
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]
+# Donde `collectstatic` junta todo para produccion (nginx/whitenoise sirven
+# desde aca).
+STATIC_ROOT = BASE_DIR / "staticfiles"
+
+# Media files: contenido generado en tiempo de ejecucion (fotos tomadas,
+# capturas de movimiento, videos grabados, entrenamiento de rostros...).
+# Antes esto se colaba dentro de STATICFILES_DIRS con un hack de prefijos
+# (storage_take_picture, storage_record, ...), que solo "andaba" porque el
+# servidor de desarrollo sirve static en vivo. STATICFILES_DIRS es para
+# assets que se recolectan con collectstatic al desplegar (una foto que se
+# toma con el servidor corriendo nunca aparece ahi salvo que se corra
+# collectstatic de nuevo). Contenido que crece solo -como estas fotos- va en
+# MEDIA_ROOT, que es justamente para eso.
+MEDIA_URL = "media/"
+MEDIA_ROOT = BASE_DIR / "storage"
 
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-
-
-# CONFIG STORARE URL
-
-WEB_STORAGE_TAKE_PICTURE = 'storage_take_picture'
-WEB_STORAGE_PICTURE_MOVE = 'storage_picture_move'
-WEB_STORAGE_RECORD = 'storage_record'
-
-STATICFILES_DIRS = [
-    (WEB_STORAGE_RECORD, "storage/record/picture/"),
-    (WEB_STORAGE_TAKE_PICTURE, "storage/picture/take/"),
-    (WEB_STORAGE_PICTURE_MOVE, "storage/move/takePicture/"),
-]
 
 #RUTAS OPENCV4.7
 DIR_HAARCASCADES = BASE_DIR / 'storage/opencv47/data/haarcascades'

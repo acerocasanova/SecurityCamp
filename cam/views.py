@@ -34,15 +34,10 @@ varShowVideo = None
 def index(request):
     return render(request, 'index.html')
 
-def defaultGen(camare):
-    while True:
-        frame = camare.getVideo()
-        yield (b'--frame\r\n' b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
-
 def showVideoCam(request):
     global videoCam
     videoCam = VideoCam()
-    return StreamingHttpResponse(defaultGen(videoCam),content_type='multipart/x-mixed-replace; boundary=frame')
+    return StreamingHttpResponse(videoCam.stream(),content_type='multipart/x-mixed-replace; boundary=frame')
 
 def showAllCam(request,idCam):
     showAll = ShowAllCam(idCam)
@@ -83,27 +78,27 @@ def showTakePicture(request,proceso):
     if proceso == 1 :
         nameFile   = "{}{}".format("TakePicture_"+str(time.time()),settings.EXTENSION_IMG)
         pathImages = "{}/{}".format(baseDir,nameFile)
-        insertPath = pathImages.replace(insertPath,"")
+        insertPath = worksFiles.convPath(pathImages,insertPath)
         imagen = Imagen(imagen_path=insertPath,imagen_name=nameFile,imagen_type=1,imagen_date=timezone.now())
         imagen.save()
 
     elif proceso == 2:
         pathImages = worksFiles.createDirectoryNanoSegundos(baseDir)
-        insertPath = pathImages.replace(insertPath,"")
+        insertPath = worksFiles.convPath(pathImages,insertPath)
         imagen = Imagen(imagen_path=insertPath,imagen_name='Directory',imagen_type=2,imagen_date=timezone.now())
         imagen.save()
 
     elif proceso == 3:
         nameFile   = "{}{}".format("VideoRecord_"+str(time.time()),settings.EXTENSION_AVI)
         pathImages = "{}/{}".format(baseDir,nameFile)
-        insertPath = pathImages.replace(insertPath,"")
+        insertPath = worksFiles.convPath(pathImages,insertPath)
         imagen = Imagen(imagen_path=insertPath,imagen_name=nameFile,imagen_type=3,imagen_date=timezone.now())
         imagen.save()
 
     return StreamingHttpResponse(takePictureCamp.getVideo(proceso= proceso,pathImages = pathImages),content_type='multipart/x-mixed-replace; boundary=frame')
 
 def showVideoIP(request):
-    return StreamingHttpResponse(defaultGen(VideoIP()),content_type='multipart/x-mixed-replace; boundary=frame')
+    return StreamingHttpResponse(VideoIP().stream(),content_type='multipart/x-mixed-replace; boundary=frame')
 
 def show_pantalla(request, numero):
     config = DictonaryConfiguration()

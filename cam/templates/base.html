@@ -14,91 +14,78 @@
     <link rel="stylesheet" href="{% static 'bootstrap/css/servSecurityCam.css' %}">
 </head>
 <body>
-    <!-- <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top shadow-sm">
         <div class="container-fluid">
-
-            <div class="collapse navbar-collapse" id="navbarCollapse">
-                <ul class="navbar-nav me-auto mb-2 mb-md-0">
+            <a class="navbar-brand d-flex align-items-center gap-2" href="{% url 'index' %}">
+                <span class="brand-dot"></span>
+                Security Cam
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarMain" aria-controls="navbarMain" aria-expanded="false"
+                aria-label="Mostrar/ocultar menu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarMain">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                            aria-expanded="false">
-                            Menu
+                        <a class="nav-link dropdown-toggle{% if request.resolver_match.url_name == 'showCamIndex' or request.resolver_match.url_name == 'show_pantalla' %} active{% endif %}"
+                            href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Visualizar Camaras
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="{% url 'index' %}">Inicio</a></li>
-                            <li><a class="dropdown-item" href="{% url 'recordIndex' %}">Reconocimiento</a></li>
-                            <li><a class="dropdown-item" href="{% url 'moveIndex' %}">Movimiento</a></li>
-                            <li><a class="dropdown-item" href="{% url 'pictureIndex' %}">Capturar Imagenes</a></li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li><a class="dropdown-item" href="#">opcion2</a></li>
+                            <li><a class="dropdown-item" href="{% url 'showCamIndex' %}">Inicio</a></li>
                         </ul>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link " href="#">Configuraciones</a>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle{% if request.resolver_match.url_name == 'recordIndex' or request.resolver_match.url_name == 'newRecord' or request.resolver_match.url_name == 'showListRecord' or request.resolver_match.url_name == 'execTrainRecord' %} active{% endif %}"
+                            href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Reconocimiento
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{% url 'newRecord' %}">Crear Ingreso</a></li>
+                            <li><a class="dropdown-item" href="{% url 'showListRecord' %}">Bitacora</a></li>
+                            <li><a class="dropdown-item" href="{% url 'execTrainRecord' %}">Cargar Reconocimiento</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle{% if request.resolver_match.url_name == 'moveIndex' or request.resolver_match.url_name == 'detectPerson' %} active{% endif %}"
+                            href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Detectar
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{% url 'moveIndex' %}">Movimiento</a></li>
+                            <li><a class="dropdown-item" href="{% url 'detectPerson' %}">Personas</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle{% if request.resolver_match.url_name == 'pictureIndex' or request.resolver_match.url_name == 'pictureList' %} active{% endif %}"
+                            href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Imagenes
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{% url 'pictureIndex' %}">Capturar</a></li>
+                            <li><a class="dropdown-item" href="{% url 'pictureList' %}">Bitacora</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle{% if request.resolver_match.url_name == 'configIndex' or request.resolver_match.url_name == 'configCam' %} active{% endif %}"
+                            href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Configuracion
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{% url 'configIndex' %}">Inicio</a></li>
+                            <li><a class="dropdown-item" href="{% url 'configCam' %}">Agregar Camara</a></li>
+                        </ul>
                     </li>
                 </ul>
-                <div class="d-flex flex-row-reverse">
-                    <div class="navbar-brand">--</div>
-                </div>
             </div>
         </div>
-    </nav>-->
-    <div class="container-fluid">
-        <div class="row g-2">
-            <div class="col-md-2">
+    </nav>
+    <main class="container-fluid content-wrap">
+        {% block content %}
 
-                <div class="b-example-divider b-example-vr"></div>
-                <div class="flex-shrink-0 p-3 bg-white">
-                    <a href="/"
-                        class="d-flex align-items-center pb-3 mb-3 link-dark text-decoration-none border-bottom">
-                        <svg class="bi pe-none me-2" width="30" height="24">
-                            <use xlink:href="#bootstrap" />
-                        </svg>
-                        <span class="fs-5 fw-semibold">Menu</span>
-                    </a>
-                    {% block sidebar %}
-                    {% endblock %}
-                    <ul class="list-unstyled ps-0">
-                        <li class="mb-3">
-                            <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
-                                data-bs-toggle="collapse" data-bs-target="#account-collapse" aria-expanded="false">
-                                Funciones
-                            </button>
-                            <div class="collapse" id="account-collapse">
-                                <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                                    <li><a href="{% url 'showCamIndex' %}"
-                                            class="link-dark d-inline-flex text-decoration-none rounded">Visualizar
-                                            Camaras</a>
-                                    </li>
-                                    <li><a href="{% url 'recordIndex' %}"
-                                            class="link-dark d-inline-flex text-decoration-none rounded">Reconocimiento</a>
-                                    </li>
-                                    <li><a href="{% url 'moveIndex' %}"
-                                            class="link-dark d-inline-flex text-decoration-none rounded">Detectar</a>
-                                    </li>
-                                    <li><a href="{% url 'pictureIndex' %}"
-                                            class="link-dark d-inline-flex text-decoration-none rounded">Imagenes</a>
-                                    </li>
-                                    <li><a href="{% url 'configIndex' %}"
-                                            class="link-dark d-inline-flex text-decoration-none rounded">Configuracion</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </li>
-                        <li class="border-top my-3"></li>
-                    </ul>
-                </div>
-
-            </div>
-            <div class="col-md">
-                {% block content %}
-
-                {% endblock %}
-            </div>
-        </div>
-    </div>
+        {% endblock %}
+    </main>
     <script src="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}"></script>
     <script src="{% static 'bootstrap/js/servSecurityCam.js' %}"></script>
     <script src="{% static 'bootstrap/js/eventos.js' %}"></script>

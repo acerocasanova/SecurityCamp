@@ -67,7 +67,18 @@ class WorksFiles(object):
         return listFile
     
     def convPath(self,full_path,directory):
-        return full_path.replace(str(directory),"")
+        """
+        Convierte una ruta de archivo real en la ruta relativa que se
+        guarda en la base de datos (imagen_path) y con la que despues se
+        arman URLs. Le quita el prefijo `directory` y normaliza los
+        separadores a '/': en Windows, os.path.join() (usado por
+        createDirectoryYMD y compania) mete '\\' entre el directorio base
+        y la subcarpeta, y esa '\\' quedaba colada en la URL final
+        (ej: /media/picture/take\\2026/09/02/...) porque nunca se
+        normalizaba. Una URL nunca deberia llevar '\\'.
+        """
+        relative = str(full_path).replace(str(directory),"")
+        return relative.replace("\\", "/")
     
     def createDirectoryYMD(self,direcotryBase):
         today = datetime.now()
